@@ -1,16 +1,23 @@
 import React, { useState, useEffect } from 'react'  
 import axios from 'axios';  
 import { Button, Card, CardBody, CardFooter, Col, Container, Form, Input, InputGroup, InputGroupAddon, InputGroupText, Row } from 'reactstrap';  
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
 function Edit(props) {  
     const initialFormState = { id: null, serialNumber: '', brand: '' , model: '', dateBought: '', status :''}
-	const [appliances, setAppliaces] = useState(initialFormState)
+    const [appliances, setAppliaces] = useState(initialFormState)
+    const [date, setDate] = useState(new Date())
     const Url = "http://localhost:8080/appliances/" + props.match.params.id; 
     const updateUrl = "http://localhost:8080/appliances"; 
         useEffect(() => {  
           const GetData = async () => {  
             const result = await axios(Url);  
-            setAppliaces(result.data);  
-          };  
+            setAppliaces(result.data); 
+            // let res = result.data.dateBought
+            // console.log(res.substr(0,10))
+            // setDate(res.substr(0,9)) 
+          }; 
           GetData();  
         }, []);  
         const UpdateEmployee = (e) => {  
@@ -31,6 +38,7 @@ function Edit(props) {
             //debugger;  
             setAppliaces({...appliances, [e.target.name]: e.target.value});  
         }  
+        
 
         const Cancel = () => {
             setAppliaces({...appliances, initialFormState})
@@ -55,7 +63,12 @@ function Edit(props) {
                     <Input type="text" placeholder="Model" name="model" id="model"  value={appliances.model} onChange={ onChange }  />  
                   </InputGroup>  
                   <InputGroup className="mb-4">  
-                    <Input type="text" placeholder="Date Bought" name="dateBought" id="dateBought" value={appliances.dateBought} onChange={ onChange }  />  
+                    {/* <Input type="text" placeholder="Date Bought" name="dateBought" id="dateBought" value={appliances.dateBought} onChange={ onChange }  />   */}
+                    <DatePicker 
+							dateFormat="yyyy-MM-dd"
+							selected={date}
+							onChange={date => setDate(date)}
+						/>
                   </InputGroup>  
                   <InputGroup className="mb-4">  
                     <Input type="text" placeholder="Status" name="status" id="status" value={appliances.status} onChange={ onChange } />  

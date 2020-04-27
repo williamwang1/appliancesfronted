@@ -1,16 +1,19 @@
 import React, { useState , useEffect} from 'react'
 import axios from 'axios'
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 import { Button, Card, CardBody, CardFooter, Col, Container, Form, Input, InputGroup, InputGroupAddon, InputGroupText, Row } from 'reactstrap';  
 function Add(props) {  
 	const initialFormState = { id: null, serial_number: '', brand: '' , model: '', date_bought: '', status :''}
 	const [appliances, setAppliaces] = useState(initialFormState)
+	const [date, setDate] = useState()
   const [showLoading, setShowLoading] = useState(false);  
   const apiUrl = "http://localhost:8080/appliances";  
   const Insert = (e) => {  
     e.preventDefault();  
     //debugger;  
-    const data = { serial_number:appliances.serial_number, brand: appliances.brand, model: appliances.model, date_bought:appliances.date_bought, status: appliances.status};  
+    const data = { serial_number:appliances.serial_number, brand: appliances.brand, model: appliances.model, date_bought:date, status: appliances.status};  
 	if (data.serial_number === '') {
 		alert("serial number can be none")
 		return
@@ -34,6 +37,9 @@ function Add(props) {
     //debugger;  
 	setAppliaces({...appliances, [e.target.name]: e.target.value});  
   }  
+  const handleChange = (value) => {
+	setDate({...date, value})
+  }
   
   return (  
     <div className="app flex-row align-items-center">  
@@ -54,8 +60,14 @@ function Add(props) {
                     <Input type="text" placeholder="Model" name="model" id="model"  value={appliances.model} onChange={ onChange }  />  
                   </InputGroup>  
                   <InputGroup className="mb-4">  
-                    <Input type="text" placeholder="Date Bought" name="date_bought" id="date_bought" value={appliances.date_bought} onChange={ onChange }  />  
-                  </InputGroup>  
+                    {/* <Input type="text" placeholder="Date Bought" name="date_bought" id="date_bought" value={appliances.date_bought} onChange={ onChange }  />   */}
+					<DatePicker 
+							placeholderText="Click to select a date"
+							dateFormat="yyyy-MM-dd"
+							selected={date}
+							onChange={date => setDate(date)}
+						/>
+				  </InputGroup>  
                   <InputGroup className="mb-4">  
                     <Input type="text" placeholder="Status" name="status" id="status" value={appliances.status} onChange={ onChange } />  
 				  </InputGroup>   
