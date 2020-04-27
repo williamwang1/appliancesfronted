@@ -7,16 +7,16 @@ import "react-datepicker/dist/react-datepicker.css";
 function Edit(props) {  
     const initialFormState = { id: null, serialNumber: '', brand: '' , model: '', dateBought: '', status :''}
     const [appliances, setAppliaces] = useState(initialFormState)
-    const [date, setDate] = useState(new Date())
+    const [date, setDate] = useState()
     const Url = "http://localhost:8080/appliances/" + props.match.params.id; 
     const updateUrl = "http://localhost:8080/appliances"; 
         useEffect(() => {  
           const GetData = async () => {  
             const result = await axios(Url);  
             setAppliaces(result.data); 
-            // let res = result.data.dateBought
-            // console.log(res.substr(0,10))
-            // setDate(res.substr(0,9)) 
+            if (result.data.dateBought !== 'undefined' && result.data.dateBought !== null && result.data.dateBought !== "") {
+                setDate(Date.parse(result.data.dateBought.substr(0,10))) 
+            }
           }; 
           GetData();  
         }, []);  
@@ -65,6 +65,7 @@ function Edit(props) {
                   <InputGroup className="mb-4">  
                     {/* <Input type="text" placeholder="Date Bought" name="dateBought" id="dateBought" value={appliances.dateBought} onChange={ onChange }  />   */}
                     <DatePicker 
+                            placeholderText="Click to select a date"
 							dateFormat="yyyy-MM-dd"
 							selected={date}
 							onChange={date => setDate(date)}
